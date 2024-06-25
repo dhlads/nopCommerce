@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Transfer;
 using FluentValidation;
@@ -44,7 +44,6 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Tax;
-using Nop.Web.Areas.Admin.Validators.Topics;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -258,18 +257,6 @@ namespace Nop.Plugin.WholeSalePet.Customization.Controllers
                 ValidateRequiredConsents(consents, form);
             }
 
-            // Fixing NopCommerce 4.70 bug
-            if (model.CountryId > 0)
-            {
-                var states = await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId);
-                model.AvailableStates = states
-                    .Select(s => new SelectListItem
-                    {
-                        Value = s.Id.ToString(),
-                        Text = s.Name
-                    }).ToList();
-            }
-
             // Validate native fields
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, _customerSettings);
             NativeFieldsValidator(model, validator);
@@ -425,10 +412,9 @@ namespace Nop.Plugin.WholeSalePet.Customization.Controllers
                 ModelState.AddModelError("", exc.Message);
             }
 
-
             //If we got this far, something failed, redisplay form
+            infoModel = await PrepareCustomerInfoModelAsync(customer, model, true, customerAttributesXml);
             return View(_infoViewPath, infoModel);
-
         }
 
         #endregion
@@ -507,11 +493,11 @@ namespace Nop.Plugin.WholeSalePet.Customization.Controllers
                     }).ToList();
             }
 
-            var registerModel = await PrepareCustomerRegisterModelAsync(model, true, customerAttributesXml, false, form);
-
             // Validate native fields
             var validator = new RegisterValidator(_localizationService, _stateProvinceService, _customerSettings);
-            NativeFieldsValidator(registerModel, validator);
+            NativeFieldsValidator(model, validator);
+
+            var registerModel = await PrepareCustomerRegisterModelAsync(model, true, customerAttributesXml, false, form);
 
             if (ModelState.IsValid)
             {
@@ -751,6 +737,7 @@ namespace Nop.Plugin.WholeSalePet.Customization.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            registerModel = await PrepareCustomerRegisterModelAsync(model, true, customerAttributesXml);
             return View(_registerViewPath, registerModel);
         }
 
@@ -770,11 +757,13 @@ namespace Nop.Plugin.WholeSalePet.Customization.Controllers
         #region Utilities
 
         /// <summary>
-        /// Prepare custom fields for infor / my account page
+        /// Prepare custom fields for info / my account page
         /// </summary>
         /// <param name="customer"></param>
+        /// <param name="customInfoModel"></param>
         /// <param name="excludeProperties"></param>
         /// <param name="overrideCustomCustomerAttributesXml"></param>
+        /// <param name="form"></param>
         /// <returns></returns>
         protected async Task<PluginCustomerInfoModel> PrepareCustomerInfoModelAsync(
             Customer customer,
@@ -813,9 +802,11 @@ namespace Nop.Plugin.WholeSalePet.Customization.Controllers
         /// <summary>
         /// Prepare custom fields for registration page
         /// </summary>
+        /// <param name="customRegisterModel"></param>
         /// <param name="excludeProperties"></param>
         /// <param name="overrideCustomCustomerAttributesXml"></param>
         /// <param name="setDefaultValues"></param>
+        /// <param name="form"></param>
         /// <returns></returns>
         protected async Task<PluginCustomerRegisterModel> PrepareCustomerRegisterModelAsync(
             PluginCustomerRegisterModel customRegisterModel = null,
