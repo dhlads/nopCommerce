@@ -286,6 +286,31 @@
                                 <span asp-validation-for="StreetAddress2"></span>
                             </div>
                         }
+						@if (Model.CityEnabled)
+						{
+							<div class="inputs">
+								<label asp-for="City" asp-postfix=":"></label>
+								<input asp-for="City" />
+								@if (Model.CityRequired)
+								{
+									<nop-required />
+								}
+								<span asp-validation-for="City"></span>
+							</div>
+						}
+						@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+						{
+							<div class="inputs">
+								<label asp-for="StateProvinceId" asp-postfix=":"></label>
+								<select asp-for="StateProvinceId" asp-items="Model.AvailableStates"></select>
+								@if (Model.StateProvinceRequired)
+								{
+									<nop-required />
+								}
+								<span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
+								<span asp-validation-for="StateProvinceId"></span>
+							</div>
+						}
                         @if (Model.ZipPostalCodeEnabled)
                         {
                             <div class="inputs">
@@ -309,19 +334,7 @@
                                 }
                                 <span asp-validation-for="County"></span>
                             </div>
-                        }
-                        @if (Model.CityEnabled)
-                        {
-                            <div class="inputs">
-                                <label asp-for="City" asp-postfix=":"></label>
-                                <input asp-for="City" />
-                                @if (Model.CityRequired)
-                                {
-                                    <nop-required />
-                                }
-                                <span asp-validation-for="City"></span>
-                            </div>
-                        }
+                        }                      
                         @if (Model.CountryEnabled)
                         {
                             <div class="inputs">
@@ -337,20 +350,7 @@
                                 }
                                 <span asp-validation-for="CountryId"></span>
                             </div>
-                        }
-                        @if (Model.CountryEnabled && Model.StateProvinceEnabled)
-                        {
-                            <div class="inputs">
-                                <label asp-for="StateProvinceId" asp-postfix=":"></label>
-                                <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"></select>
-                                @if (Model.StateProvinceRequired)
-                                {
-                                    <nop-required />
-                                }
-                                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
-                                <span asp-validation-for="StateProvinceId"></span>
-                            </div>
-                        }
+                        }                       
                     </div>
                 </div>
             }
