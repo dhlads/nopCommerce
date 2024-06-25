@@ -1,0 +1,11 @@
+﻿{
+  "Group": "WholeSalePet",
+  "FriendlyName": "Customization",
+  "SystemName": "WholeSalePet.Customization",
+  "Version": "4.70.1",
+  "SupportedVersions": [ "4.70" ],
+  "Author": "Findmore Solutions",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.WholeSalePet.Customization.dll",
+  "Description": "This plugin allows add custom fields to registration form"
+}

@@ -1,0 +1,637 @@
+﻿@model Nop.Plugin.WholeSalePet.Customization.Models.PluginCustomerRegisterModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Register").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-registration-page");
+}
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include jQuery UI -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+<link rel="stylesheet" href="~/Plugins/WholeSalePet.Customization/Content/css/plugin.customer.css" />
+
+@await Html.PartialAsync("~/Plugins/WholeSalePet.Customization/Views/_CustomValidation.cshtml", model: Model.GenericAttributes)
+
+<div class="page registration-page">
+    <div class="page-title">
+        <h1>@T($"{Nop.Plugin.WholeSalePet.Customization.Plugin.PluginLocalResourcesPrefix}.RegisterTitle")</h1>
+    </div>
+
+    <div class="registerDescription">
+        @T($"{Nop.Plugin.WholeSalePet.Customization.Plugin.PluginLocalResourcesPrefix}.RegisterDescription")
+    </div>
+
+    <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.RegisterTop, additionalData = Model })
+        <form asp-route="customer/register" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" autocomplete="off" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <div class="fieldset">
+                <div class="title">
+                    <strong>@T($"{Nop.Plugin.WholeSalePet.Customization.Plugin.PluginLocalResourcesPrefix}.AccountInformation")</strong>
+                </div>
+                <div class="form-fields">
+
+                    @if (Model.UsernamesEnabled)
+                    {
+                        <div class="inputs">
+                            <label asp-for="Username" asp-postfix=":"></label>
+                            <input asp-for="Username" />
+                            <nop-required />
+                            <span asp-validation-for="Username"></span>
+                            @if (Model.CheckUsernameAvailabilityEnabled)
+                            {
+                                @await Html.PartialAsync("../../Views/Customer/_CheckUsernameAvailability")
+                            }
+                        </div>
+
+                    }
+
+                    <div class="inputs">
+                        <label asp-for="Email" asp-postfix=":"></label>
+                        <input asp-for="Email" />
+                        <nop-required />
+                        <span asp-validation-for="Email"></span>
+                    </div>
+                    @if (Model.EnteringEmailTwice)
+                    {
+                        <div class="inputs">
+                            <label asp-for="ConfirmEmail" asp-postfix=":"></label>
+                            <input asp-for="ConfirmEmail" />
+                            <nop-required />
+                            <span asp-validation-for="ConfirmEmail"></span>
+                        </div>
+                    }
+
+                    <div class="inputs">
+                        <label asp-for="Password" asp-postfix=":"></label>
+                        <input asp-for="Password" />
+                        <nop-required />
+                        <span asp-validation-for="Password"></span>
+                    </div>
+                    <div class="fieldDescription lg">
+                        Password must be at least 6 characters long with at least one lower case letter and one number.
+                    </div>
+                    <div class="inputs">
+                        <label asp-for="ConfirmPassword" asp-postfix=":"></label>
+                        <input asp-for="ConfirmPassword" />
+                        <nop-required />
+                        <span asp-validation-for="ConfirmPassword"></span>
+                    </div>
+
+                    @if (Model.CompanyEnabled)
+                    {
+                        <div class="inputs">
+                            <label asp-for="Company" asp-postfix=":"></label>
+                            <input asp-for="Company" />
+                            @if (Model.CompanyRequired)
+                            {
+                                <nop-required />
+                            }
+                            <span asp-validation-for="Company"></span>
+                        </div>
+                    }
+
+                    @* Website URL *@
+                    <div class="inputs">
+                        <label asp-for="GenericAttributes.WebsiteURL" name="WebsiteURL" asp-postfix=":"></label>
+                        <input asp-for="GenericAttributes.WebsiteURL" />
+                        <span asp-validation-for="GenericAttributes.WebsiteURL"></span>
+                    </div>
+
+                    @if (Model.GenderEnabled)
+                    {
+                        <div class="inputs">
+                            <label for="gender">@T("Account.Fields.Gender"):</label>
+                            <div id="gender" class="gender">
+                                <span class="male">
+                                    <input type="radio" asp-for="Gender" value="M" checked="@(Model.Gender == "M")" id="gender-male" />
+                                    <label class="forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</label>
+                                </span>
+                                <span class="female">
+                                    <input type="radio" asp-for="Gender" value="F" checked="@(Model.Gender == "F")" id="gender-female" />
+                                    <label class="forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</label>
+                                </span>
+                                @if (Model.NeutralGenderEnabled)
+                                {
+                                    <span class="Neutral">
+                                        <input type="radio" asp-for="Gender" value="N" checked="@(Model.Gender == "N")" id="gender-neutral" />
+                                        <label class="forcheckbox" for="gender-neutral">@T("Account.Fields.Gender.Neutral")</label>
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    }
+                    @if (Model.FirstNameEnabled)
+                    {
+                        <div class="inputs">
+                            <label asp-for="FirstName" asp-postfix=":"></label>
+                            <input asp-for="FirstName" />
+                            @if (Model.FirstNameRequired)
+                            {
+                                <nop-required />
+                            }
+                            <span asp-validation-for="FirstName"></span>
+                        </div>
+                    }
+                    @if (Model.LastNameEnabled)
+                    {
+                        <div class="inputs">
+                            <label asp-for="LastName" asp-postfix=":"></label>
+                            <input asp-for="LastName" />
+                            @if (Model.LastNameRequired)
+                            {
+                                <nop-required />
+                            }
+                            <span asp-validation-for="LastName"></span>
+                        </div>
+                    }
+                    @if (Model.DateOfBirthEnabled)
+                    {
+                        <div class="inputs date-of-birth">
+                            <label>@T("Account.Fields.DateOfBirth"):</label>
+                            <nop-date-picker asp-day-name="@Html.NameFor(x => x.DateOfBirthDay)"
+                                             asp-month-name="@Html.NameFor(x => x.DateOfBirthMonth)"
+                                             asp-year-name="@Html.NameFor(x => x.DateOfBirthYear)"
+                                             asp-begin-year="@(DateTime.Now.AddYears(-110))"
+                                             asp-end-year="@(DateTime.UtcNow)"
+                                             asp-selected-date="@Model.ParseDateOfBirth()" />
+
+                            @if (Model.DateOfBirthRequired)
+                            {
+                                <nop-required />
+                            }
+                            <span asp-validation-for="DateOfBirthDay"></span>
+                            <span asp-validation-for="DateOfBirthMonth"></span>
+                            <span asp-validation-for="DateOfBirthYear"></span>
+                        </div>
+                    }
+
+                    @if (Model.PhoneEnabled || Model.FaxEnabled)
+                    {
+                        @if (Model.PhoneEnabled)
+                        {
+                            <div class="inputs">
+                                <label asp-for="Phone" asp-postfix=":"></label>
+                                <input asp-for="Phone" />
+                                @if (Model.PhoneRequired)
+                                {
+                                    <nop-required />
+                                }
+                                <span asp-validation-for="Phone"></span>
+                            </div>
+                        }
+                        @if (Model.FaxEnabled)
+                        {
+                            <div class="inputs">
+                                <label asp-for="Fax" asp-postfix=":"></label>
+                                <input asp-for="Fax" />
+                                @if (Model.FaxRequired)
+                                {
+                                    <nop-required />
+                                }
+                                <span asp-validation-for="Fax"></span>
+                            </div>
+                        }
+                    }
+
+
+                    @if (Model.DisplayVatNumber)
+                    {
+                        <div class="inputs">
+                            <label asp-for="VatNumber" asp-postfix=":"></label>
+                            <input asp-for="VatNumber" />
+                            <span class="vat-note"><em>@T("Account.Fields.VatNumber.Note")</em></span>
+                        </div>
+                    }
+
+                    @* State Tax Resale ID *@
+                    <div class="inputs">
+                        <label asp-for="GenericAttributes.StateTaxResaleID" name="StateTaxResaleID" asp-postfix=":"></label>
+                        <input asp-for="GenericAttributes.StateTaxResaleID" />
+                        <nop-required />
+                        <span asp-validation-for="GenericAttributes.StateTaxResaleID"></span>
+                    </div>
+                    <div class="fieldDescription">
+                        If you do not have/know this please <a href="mailto:@T($"{Nop.Plugin.WholeSalePet.Customization.Plugin.PluginLocalResourcesPrefix}.ContactUsEmail")">contact us</a>.
+                    </div>
+
+                    @* Tax ID Certificate File upload section *@
+                    <div class="inputs">
+                        <label asp-for="TaxIDCertificateFile" class="control-label">Tax ID Certificate File:</label>
+                        <input type="file" asp-for="TaxIDCertificateFile" name="TaxIDCertificateFile" accept=".jpg, .pdf" class="form-control" />
+                        <span asp-validation-for="TaxIDCertificateFile" class="text-danger"></span>
+                    </div>
+                    <div class="fieldDescription">Tax ID Certificates must be in PDF or JPG format.</div>
+                </div>
+            </div>
+
+            @if (Model.CustomerAttributes.Count > 0)
+            {
+                <div class="fieldset">
+                    <div class="title">
+                        <strong>
+                            Extra Information
+                        </strong>
+                    </div>
+                    <div class="form-fields">
+                        @await Html.PartialAsync("../../Views/Customer/_CustomerAttributes", Model.CustomerAttributes)
+                        <div asp-validation-for="CustomerAttributes" class="text-danger"></div>
+                    </div>
+                </div>
+            }
+
+
+            @if (Model.StreetAddressEnabled ||
+            Model.StreetAddress2Enabled ||
+            Model.ZipPostalCodeEnabled ||
+            Model.CityEnabled ||
+            Model.CountyEnabled ||
+            Model.CountryEnabled)
+            {
+                <div class="fieldset">
+                    <div class="title">
+                        <strong>
+                            @T($"{Nop.Plugin.WholeSalePet.Customization.Plugin.PluginLocalResourcesPrefix}.AddressTitle")
+                        </strong>
+                    </div>
+                    <div class="form-fields">
+                        @if (Model.StreetAddressEnabled)
+                        {
+                            <div class="inputs">
+                                <label asp-for="StreetAddress" asp-postfix=":"></label>
+                                <input asp-for="StreetAddress" />
+                                @if (Model.StreetAddressRequired)
+                                {
+                                    <nop-required />
+                                }
+                                <span asp-validation-for="StreetAddress"></span>
+                            </div>
+                        }
+                        @if (Model.StreetAddress2Enabled)
+                        {
+                            <div class="inputs">
+                                <label asp-for="StreetAddress2" asp-postfix=":"></label>
+                                <input asp-for="StreetAddress2" />
+                                @if (Model.StreetAddress2Required)
+                                {
+                                    <nop-required />
+                                }
+                                <span asp-validation-for="StreetAddress2"></span>
+                            </div>
+                        }
+                        @if (Model.ZipPostalCodeEnabled)
+                        {
+                            <div class="inputs">
+                                <label asp-for="ZipPostalCode" asp-postfix=":"></label>
+                                <input asp-for="ZipPostalCode" />
+                                @if (Model.ZipPostalCodeRequired)
+                                {
+                                    <nop-required />
+                                }
+                                <span asp-validation-for="ZipPostalCode"></span>
+                            </div>
+                        }
+                        @if (Model.CountyEnabled)
+                        {
+                            <div class="inputs">
+                                <label asp-for="County" asp-postfix=":"></label>
+                                <input asp-for="County" />
+                                @if (Model.CountyRequired)
+                                {
+                                    <nop-required />
+                                }
+                                <span asp-validation-for="County"></span>
+                            </div>
+                        }
+                        @if (Model.CityEnabled)
+                        {
+                            <div class="inputs">
+                                <label asp-for="City" asp-postfix=":"></label>
+                                <input asp-for="City" />
+                                @if (Model.CityRequired)
+                                {
+                                    <nop-required />
+                                }
+                                <span asp-validation-for="City"></span>
+                            </div>
+                        }
+                        @if (Model.CountryEnabled)
+                        {
+                            <div class="inputs">
+                                <label asp-for="CountryId" asp-postfix=":"></label>
+                                <select asp-for="CountryId" asp-items="Model.AvailableCountries"
+                                        data-trigger="country-select"
+                                        data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
+                                        data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
+                                        data-loading="#states-loading-progress"></select>
+                                @if (Model.CountryRequired)
+                                {
+                                    <nop-required />
+                                }
+                                <span asp-validation-for="CountryId"></span>
+                            </div>
+                        }
+                        @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+                        {
+                            <div class="inputs">
+                                <label asp-for="StateProvinceId" asp-postfix=":"></label>
+                                <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"></select>
+                                @if (Model.StateProvinceRequired)
+                                {
+                                    <nop-required />
+                                }
+                                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
+                                <span asp-validation-for="StateProvinceId"></span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.AllowCustomersToSetTimeZone)
+            {
+                <div class="fieldset">
+                    <div class="title">
+                        <strong>@T("Account.Preferences")</strong>
+                    </div>
+                    <div class="form-fields">
+                        <div class="inputs">
+                            <label asp-for="TimeZoneId" asp-postfix=":"></label>
+                            <select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones"></select>
+                            <span asp-validation-for="TimeZoneId"></span>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="fieldset">
+                <div class="title">
+                    <strong>@T($"{Nop.Plugin.WholeSalePet.Customization.Plugin.PluginLocalResourcesPrefix}.AdditionalInformation")</strong>
+                </div>
+                <div class="form-fields">
+                    <div class="additionalDescription">
+                        @T($"{Nop.Plugin.WholeSalePet.Customization.Plugin.PluginLocalResourcesPrefix}.AdditionalInformationDescription")
+                    </div>
+
+                    @* BusinessCategory *@
+                    <div class="form-group inputs customField">
+                        <label asp-for="GenericAttributes.BusinessCategory" class="col-form-label" asp-postfix=":">
+                            Which business category best represents your primary focus?
+                        </label>
+                        <ul class="option-list">
+                            <li>
+                                <input asp-for="GenericAttributes.BusinessCategory" id="businessCategory_brickAndMortar" class="form-check-input" type="radio" value="BrickAndMortarRetail" />
+                                <label class="form-check-label" for="businessCategory_brickAndMortar">Brick and Mortar Retail</label>
+                            </li>
+                            <li>
+                                <input asp-for="GenericAttributes.BusinessCategory" id="businessCategory_eCommerce" class="form-check-input" type="radio" value="ECommerce" />
+                                <label class="form-check-label" for="businessCategory_eCommerce">E-Commerces</label>
+                            </li>
+                            <li>
+                                <input asp-for="GenericAttributes.BusinessCategory" id="businessCategory_Services" class="form-check-input" type="radio" value="Services" />
+                                <label class="form-check-label" for="businessCategory_Services">Services</label>
+                            </li>
+                        </ul>
+                        <nop-required />
+                        <span asp-validation-for="GenericAttributes.BusinessCategory" class="text-danger"></span>
+                    </div>
+
+                    @* Store type - visible wether BusinessCategory value = "Brick and Mortar Retail" *@
+                    <div id="storeTypeGroup" class="form-group inputs customField" style="display:none;">
+                        <label asp-for="GenericAttributes.StoreType" class="col-form-label" asp-postfix=":">Please specify the store type</label>
+                        <ul class="option-list">
+                            <li>
+                                <input asp-for="GenericAttributes.StoreType" id="storeType_petSpeciality" class="form-check-input" type="radio" value="PetSpeciality" />
+                                <label class="form-check-label" for="storeType_petSpeciality">Pet Speciality</label>
+                            </li>
+                            <li>
+                                <input asp-for="GenericAttributes.StoreType" id="storeType_giftStore" class="form-check-input" type="radio" value="GiftStore" />
+                                <label class="form-check-label" for="storeType_giftStore">Gift Store</label>
+                            </li>
+                            <li>
+                                <input asp-for="GenericAttributes.StoreType" id="storeType_other" class="form-check-input" type="radio" value="Other" />
+                                <label class="form-check-label" for="storeType_other">Other</label>
+                            </li>
+                        </ul>
+                        <nop-required />
+                        <span asp-validation-for="GenericAttributes.StoreType" class="text-danger"></span>
+
+
+                    </div>
+
+                    @* Other Store type - visible wether Store Type value = "Other" *@
+                    <div id="otherStoreType" class="form-group inputs customField" style="display:none;">
+                        <label asp-for="GenericAttributes.OtherStoreType" for="otherStoreType" class="col-form-label" asp-postfix=":">Other type of business</label>
+                        <input asp-for="GenericAttributes.OtherStoreType" id="otherStoreType" class="form-check-input" type="text" />
+                        <nop-required />
+                        <span asp-validation-for="GenericAttributes.OtherStoreType" class="text-danger"></span>
+                    </div>
+
+                    @* E-Commerce - visible wether BusinessCategory value = "E-Commerce" *@
+                    <div id="eCommerceBusiness" class="form-group inputs customField" style="display:none;">
+                        <label asp-for="GenericAttributes.ECommerceBusiness" class="col-form-label" asp-postfix=":"></label>
+                        <ul class="option-list">
+                            <li>
+                                <input asp-for="GenericAttributes.ECommerceBusiness" id="eCommerceBusiness_retailer" class="form-check-input" type="radio" value="StockingOnlineRetailer" />
+                                <label class="form-check-label" for="eCommerceBusiness_retailer">Stocking Online Retailer</label>
+                            </li>
+                            <li>
+                                <input asp-for="GenericAttributes.ECommerceBusiness" id="eCommerceBusiness_dropShipper" class="form-check-input" type="radio" value="DropShipper" />
+                                <label class="form-check-label" for="eCommerceBusiness_dropShipper">Drop-Shipper</label>
+                            </li>
+                            <li>
+                                <input asp-for="GenericAttributes.ECommerceBusiness" id="eCommerceBusiness_marketplaces" class="form-check-input" type="radio" value="ThirdPartyMarketplaces" />
+                                <label class="form-check-label" for="eCommerceBusiness_marketplaces">3rd Party Marketplaces</label>
+                            </li>
+                            <div style="margin-top: 10px">&nbsp;</div>
+                            <li>
+                                <input asp-for="GenericAttributes.ECommerceBusiness" id="eCommerceBusiness_socialMedia" class="form-check-input" type="radio" value="SocialMedia" />
+                                <label class="form-check-label" for="eCommerceBusiness_socialMedia">Social Media</label>
+                            </li>
+                            <li>
+                                <input asp-for="GenericAttributes.ECommerceBusiness" id="eCommerceBusiness_other" class="form-check-input" type="radio" value="Other" />
+                                <label class="form-check-label" for="eCommerceBusiness_other">Other</label>
+                            </li>
+                        </ul>
+                        <nop-required />
+                        <span asp-validation-for="GenericAttributes.ECommerceBusiness" class="text-danger"></span>
+                    </div>
+
+                    @* Other E-Commerce Business - visible wether E-Commerce Business value = "Other" *@
+                    <div id="otherECommerceBusiness" class="form-group inputs customField" style="display:none;">
+                        <label asp-for="GenericAttributes.OtherECommerceBusiness" for="otherECommerceBusiness" class="col-form-label" asp-postfix=":"></label>
+                        <input asp-for="GenericAttributes.OtherECommerceBusiness" id="otherECommerceBusiness" class="form-check-input" type="text" />
+                        <nop-required />
+                        <span asp-validation-for="GenericAttributes.OtherECommerceBusiness" class="text-danger"></span>
+                    </div>
+
+                    @* Services - visible wether BusinessCategory value = "Services" *@
+                    <div id="serviceBusiness" class="form-group inputs customField" style="display:none;">
+                        <label asp-for="GenericAttributes.ServiceBusiness" class="col-form-label" asp-postfix=":"></label>
+                        <ul class="option-list">
+                            <li>
+                                <input asp-for="GenericAttributes.ServiceBusiness" id="Service_grooming" class="form-check-input" type="radio" value="Grooming" />
+                                <label class="form-check-label" for="Service_grooming">Grooming</label>
+                            </li>
+                            <li>
+                                <input asp-for="GenericAttributes.ServiceBusiness" id="Service_boardingDaycare" class="form-check-input" type="radio" value="BoardingDaycare" />
+                                <label class="form-check-label" for="Service_boardingDaycare">Boarding/ Daycare</label>
+                            </li>
+                            <li>
+                                <input asp-for="GenericAttributes.ServiceBusiness" id="Service_rescueShelter" class="form-check-input" type="radio" value="RescueShelter" />
+                                <label class="form-check-label" for="Service_rescueShelter">Rescue/ Shelter</label>
+                            </li>
+                            <div style="margin-top: 10px">&nbsp;</div>
+                            <li>
+                                <input asp-for="GenericAttributes.ServiceBusiness" id="Service_veterinary" class="form-check-input" type="radio" value="Veterinary" />
+                                <label class="form-check-label" for="Service_veterinary">Veterinary</label>
+                            </li>
+                            <li>
+                                <input asp-for="GenericAttributes.ServiceBusiness" id="Service_trainer" class="form-check-input" type="radio" value="Trainer" />
+                                <label class="form-check-label" for="Service_trainer">Trainer</label>
+                            </li>
+                            <li>
+                                <input asp-for="GenericAttributes.ServiceBusiness" id="Service_other" class="form-check-input" type="radio" value="Other" />
+                                <label class="form-check-label" for="Service_other">Other</label>
+                            </li>
+                        </ul>
+                        <nop-required />
+                        <span asp-validation-for="GenericAttributes.ServiceBusiness" class="text-danger"></span>
+                    </div>
+
+                    @* Other Service Business visible wether Services Business value = "Other" *@
+                    <div id="otherServiceBusiness" class="form-group inputs customField" style="display:none;">
+                        <label asp-for="GenericAttributes.OtherServiceBusiness" for="otherServiceBusiness" class="col-form-label" asp-postfix=":"></label>
+                        <input asp-for="GenericAttributes.OtherServiceBusiness" id="otherServiceBusiness" class="form-check-input" type="text" />
+                        <nop-required />
+                        <span asp-validation-for="GenericAttributes.OtherServiceBusiness" class="text-danger"></span>
+                    </div>
+
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.RegisterBottom, additionalData = Model })
+
+                    <div class="optionsAndCaptcha">
+                        @if (Model.NewsletterEnabled)
+                        {
+                            @if (Model.NewsletterEnabled)
+                            {
+                                <div class="inputs">
+                                    <div class="newsletter">
+                                        <label asp-for="Newsletter" asp-postfix="">@Html.Raw(T($"{Nop.Plugin.WholeSalePet.Customization.Plugin.PluginLocalResourcesPrefix}.NewsletterText"))</label>
+                                        <input asp-for="Newsletter" />
+                                        <span asp-validation-for="Newsletter"></span>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                        @if (Model.AcceptPrivacyPolicyEnabled || Model.GdprConsents.Count > 0)
+                        {
+                            <div>
+                                @if (Model.AcceptPrivacyPolicyEnabled)
+                                {
+                                    <script asp-location="Footer">
+                                        $(function () {
+                                            $('#register-button').on('click', function () {
+                                                if ($('#accept-consent').is(':checked')) {
+                                                    //do some stuff
+                                                    return true;
+                                                } else {
+                                                    //just show validation errors, don't post
+                                                    alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
+                                                    return false;
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                    <div class="inputs accept-consent">
+                                        <input id="accept-consent" type="checkbox" name="accept-consent" />
+                                        <label for="accept-consent">
+                                            @T("Account.Fields.AcceptPrivacyPolicy")
+                                            @* This span tag has been moved up here to remove horizontal gap space between the two parts of the sentence *@
+                                            <span class="read" id="read-privacyinfo">@T($"{Nop.Plugin.WholeSalePet.Customization.Plugin.PluginLocalResourcesPrefix}.AcceptPrivacyPolicyLink")</span>
+                                        </label>
+                                        @if (Model.AcceptPrivacyPolicyPopup)
+                                        {
+                                            @* <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span> *@
+
+                                            <script asp-location="Footer">
+                                                $(function () {
+                                                    $('#read-privacyinfo').on('click',
+                                                        function (e) {
+                                                            displayPopupContentFromUrl(
+                                                                '@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })',
+                                                                '@T("Account.Fields.AcceptPrivacyPolicy")');
+                                                        });
+                                                });
+                                            </script>
+                                        }
+                                        else
+                                        {
+                                            <a class="read" id="read-privacyinfo" href="@Url.RouteTopicUrl("privacyinfo")">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
+                                        }
+                                    </div>
+                                }
+
+                                @if (Model.GdprConsents.Count > 0)
+                                {
+                                    foreach (var consent in Model.GdprConsents)
+                                    {
+                                        if (consent.IsRequired)
+                                        {
+                                            <script asp-location="Footer">
+                                                $(function () {
+                                                    $('#register-button').on('click', function () {
+                                                        if ($('#consent@(consent.Id)').is(':checked')) {
+                                                            //do some stuff
+                                                            return true;
+                                                        } else {
+                                                            //just show validation errors, don't post
+                                                            alert('@Html.Raw(JavaScriptEncoder.Default.Encode(consent.RequiredMessage))');
+                                                            return false;
+                                                        }
+                                                    });
+                                                });
+                                            </script>
+                                        }
+                                        <div class="inputs accept-consent">
+                                            <input id="consent@(consent.Id)" type="checkbox" name="consent@(consent.Id)" checked="@consent.Accepted" />
+                                            <label for="consent@(consent.Id)">@consent.Message</label>
+                                        </div>
+                                    }
+
+                                }
+                            </div>
+                        }
+
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div>
+                                <nop-captcha />
+                            </div>
+                        }
+                        @if (Model.HoneypotEnabled)
+                        {
+                            <div>
+                                @Html.Raw(Html.GenerateHoneypotInput())
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button type="submit" name="register-button" id="register-button" class="button-1 register-next-step-button">@T("Account.Register.Button")</button>
+            </div>
+        </form>
+        <div class="external-authentication">
+            @await Component.InvokeAsync(typeof(ExternalMethodsViewComponent), "ExternalAuthentication")
+        </div>
+    </div>
+</div>

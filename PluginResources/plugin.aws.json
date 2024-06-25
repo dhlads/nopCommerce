@@ -1,0 +1,9 @@
+﻿{
+  "AWS": {
+    "AccessKeyId": "AKIAQ3EGU3222ND7NXNX",
+    "SecretAccessKey": "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",
+    "Region": "us-east-1",
+    "DevBucketName": "fmwsptesttaxcerts",
+    "ProdBucketName": "fmowspprodtaxcerts"
+  }
+}

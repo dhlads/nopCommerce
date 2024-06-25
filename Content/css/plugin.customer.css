@@ -1,0 +1,109 @@
+﻿.account-page .customField label {
+  width: 140px;
+  text-align: left;
+}
+
+.registerDescription {
+  margin: 27px 0;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.additionalDescription {
+  font-size: 1.2em;
+}
+
+.customField {
+  display: block;
+}
+
+  .customField label.col-form-label {
+    margin-right: 20px;
+  }
+
+  .customField label.col-form-label {
+    margin-right: 20px;
+  }
+
+  .customField:not(:last-child) {
+    margin-bottom: 20px;
+  }
+
+  .customField .option-list {
+    margin-right: -10px;
+    vertical-align: top;
+    margin-top: -5px;
+  }
+
+
+#otherStoreType input,
+#otherECommerceBusiness input,
+#otherServiceBusiness input {
+  width: 320px;
+}
+
+.fieldDescription {
+  margin: -10px 0 20px 0px;
+  text-align: center;
+  font-style: italic;
+}
+
+  .fieldDescription.lg {
+    text-wrap: balance;
+    padding: 0px 35%;
+  }
+
+
+input[type="file"]::file-selector-button {
+  border: 2px solid #4ab2f1;
+  padding: .2em .4em;
+  border-radius: .2em;
+  background-color: #4AB2F1;
+  transition: 1s;
+  color: #fff;
+}
+
+a:link {
+  color: #47a5ae;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.fieldDescription a:visited {
+  color: #47a5ae;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.fieldDescription a:hover {
+  color: #0000EE;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.fieldDescription a:active {
+  color: #47a5ae;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.optionsAndCaptcha,
+.optionsSection {
+  margin-top: 50px;
+}
+
+  .optionsSection input {
+    margin-right: 15px;
+  }
+
+.newsletter {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+  .newsletter label {
+    width: 100%;
+    text-align: center;
+    padding: 0 4vw;
+  }

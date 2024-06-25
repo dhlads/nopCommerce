@@ -1,0 +1,145 @@
+﻿<script>
+    $(document).ready(function () {
+        // Set MaxLength to "State Tax Resal ID" field
+        $('input[name="GenericAttributes.StateTaxResaleID"]').attr('maxlength', 50);
+
+        // Function to show/hide Business Category Subtypes based on BusinessCategory selection
+        function toggleBusinessCategorySubtypes() {
+            if ($('input[name="GenericAttributes.BusinessCategory"]:checked').val() === "BrickAndMortarRetail") {
+                $('#storeTypeGroup').show();
+            } else {
+                $('#storeTypeGroup').hide();
+                $('input[name="GenericAttributes.StoreType"]').prop('checked', false);
+            }
+
+            if ($('input[name="GenericAttributes.StoreType"]:checked').val() === "Other") {
+                $('#otherStoreType').show();
+            } else {
+                $('#otherStoreType').hide();
+                $('input[name="GenericAttributes.OtherStoreType"]').val("");
+            }
+
+            if ($('input[name="GenericAttributes.BusinessCategory"]:checked').val() === "ECommerce") {
+                $('#eCommerceBusiness').show();
+            } else {
+                $('#eCommerceBusiness').hide();
+                $('input[name="GenericAttributes.ECommerceBusiness"]').prop('checked', false);
+            }
+
+            if ($('input[name="GenericAttributes.ECommerceBusiness"]:checked').val() === "Other") {
+                $('#otherECommerceBusiness').show();
+            } else {
+                $('#otherECommerceBusiness').hide();
+                $('input[name="GenericAttributes.OtherECommerceBusiness"]').val("");
+            }
+
+            if ($('input[name="GenericAttributes.BusinessCategory"]:checked').val() === "Services") {
+                $('#serviceBusiness').show();
+            } else {
+                $('#serviceBusiness').hide();
+                $('input[name="GenericAttributes.ServiceBusiness"]').prop('checked', false);
+            }
+
+            if ($('input[name="GenericAttributes.ServiceBusiness"]:checked').val() === "Other") {
+                $('#otherServiceBusiness').show();
+            } else {
+                $('#otherServiceBusiness').hide();
+                $('input[name="GenericAttributes.OtherServiceBusiness"]').val("");
+            }
+        }
+
+
+        // Function to show/hide Other Store Type based on StoreType selection
+        function toggleOtherStoreType() {
+            if ($('input[name="GenericAttributes.StoreType"]:checked').val() === "Other") {
+                $('#otherStoreType').show();
+            } else {
+                $('#otherStoreType').hide();
+                $('input[name="GenericAttributes.OtherStoreType"]').val("");
+            }
+        }
+
+        // Function to show/hide Other E-Commerce Business based on E-Commerce business selection
+        function toggleOtherECommerceBusiness() {
+            if ($('input[name="GenericAttributes.ECommerceBusiness"]:checked').val() === "Other") {
+                $('#otherECommerceBusiness').show();
+            } else {
+                $('#otherECommerceBusiness').hide();
+                $('input[name="GenericAttributes.OtherECommerceBusiness"]').val("");
+            }
+        }
+
+        // Function to show/hide Other Service Business based on Services business selection
+        function toggleOtherServiceBusiness() {
+            if ($('input[name="GenericAttributes.ServiceBusiness"]:checked').val() === "Other") {
+                $('#otherServiceBusiness').show();
+            } else {
+                $('#otherServiceBusiness').hide();
+                $('input[name="GenericAttributes.OtherServiceBusiness"]').val("");
+            }
+        }
+
+        // Attach the toggle functions
+        $('input[name="GenericAttributes.BusinessCategory"]').change(toggleBusinessCategorySubtypes);
+        $('input[name="GenericAttributes.StoreType"]').change(toggleOtherStoreType);
+        $('input[name="GenericAttributes.ECommerceBusiness"]').change(toggleOtherECommerceBusiness);
+        $('input[name="GenericAttributes.ServiceBusiness"]').change(toggleOtherServiceBusiness);
+
+        // Initial call to set the visibility
+        toggleBusinessCategorySubtypes();
+        toggleOtherStoreType();
+        toggleOtherECommerceBusiness();
+        toggleOtherServiceBusiness();
+
+        // Prevent form submission if required data is not fullfilled
+        $('form').on('submit', function (e) {
+            if (!$('input[name="GenericAttributes.BusinessCategory"]:checked').val()) {
+                alert('Please select a business category.');
+                e.preventDefault();
+            }
+
+            if ($('input[name="GenericAttributes.BusinessCategory"]:checked').val() === "BrickAndMortarRetail") {
+
+                if (!$('input[name="GenericAttributes.StoreType"]:checked').val()) {
+                    alert('Please select a store type category.');
+                    e.preventDefault();
+
+                } else if ($('input[name="GenericAttributes.StoreType"]:checked').val() === "Other" &&
+                    $('input[name="GenericAttributes.OtherStoreType"]').val() === "") {
+
+                    alert('Please insert a store type value.');
+                    e.preventDefault();
+                }
+            }
+
+            if ($('input[name="GenericAttributes.BusinessCategory"]:checked').val() === "ECommerce") {
+
+                if (!$('input[name="GenericAttributes.ECommerceBusiness"]:checked').val()) {
+                    alert('Please select a e-commerce business category.');
+                    e.preventDefault();
+
+                } else if ($('input[name="GenericAttributes.ECommerceBusiness"]:checked').val() === "Other" &&
+                    $('input[name="GenericAttributes.OtherECommerceBusiness"]').val() === "") {
+
+                    alert('Please insert an e-commerce business value.');
+                    e.preventDefault();
+                }
+            }
+
+            if ($('input[name="GenericAttributes.BusinessCategory"]:checked').val() === "Services") {
+
+                if (!$('input[name="GenericAttributes.ServiceBusiness"]:checked').val()) {
+                    alert('Please select a Service category.');
+                    e.preventDefault();
+
+                } else if ($('input[name="GenericAttributes.ServiceBusiness"]:checked').val() === "Other" &&
+                    $('input[name="GenericAttributes.OtherServiceBusiness"]').val() === "") {
+
+                    alert('Please insert a service business value.');
+                    e.preventDefault();
+                }
+            }
+        });
+    });
+
+</script>
